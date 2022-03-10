@@ -84,19 +84,21 @@ public class MainActivity extends AppCompatActivity {
         // First, we set up a notification channel, per Android's requirement
         NotificationChannel myChannel = new NotificationChannel("CHANNEL_ID", "CHANNEL_NAME", NotificationManager.IMPORTANCE_DEFAULT);
 
+        // Optional: in case we want to assign a clickable action, we create
+        // a pending intent
+        Intent intent = new Intent(getApplicationContext(), ChildActivity.class);
+        PendingIntent myPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         // Second, we create the Notification Adapter and assign the properties
         myBuilder = new NotificationCompat.Builder(getApplicationContext(), "CHANNEL_ID")
                 .setSmallIcon(R.mipmap.ic_launcher_round) // notification icon
                 .setContentTitle("Title of this notification")
                 .setContentText("Text that describes the notification")
                 .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bm))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        // Optional: in case we want to assign a clickable action, we create
-        // a pending intent
-        Intent intent = new Intent(getApplicationContext(), ChildActivity.class);
-        PendingIntent myPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        myBuilder.setContentIntent(myPendingIntent);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(myPendingIntent)
+                .addAction(0, "Click Me", myPendingIntent)
+                .setAutoCancel(false);
 
         // Finally, we create the actual Notification method and assign it the channel
         myNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
